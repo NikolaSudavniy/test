@@ -1,0 +1,504 @@
+Установка
+КОМПОНЕНТЫ
+JSX
+МОДУЛЬНЫЙ CSS
+РОУТИНГ
+PROPS
+MAP + state + props
+PropTypes
+СТИЛИ через переменную и/или ф-цию
+СОБЫТИЯ state setState
+
+
+//Установка пакета(плагина create-react-app) в окне команд(1 раз)
+npm install -g create-react-app
+
+//Проверка версии
+create-react-app --version
+
+// создание проекта с именем app-v1
+create-react-app app-v1
+
+//Переход в папку проекта
+cd app-v1
+
+//Запуск локального сервер
+npm start
+
+// адресс 
+http://localhost:3000
+
+// Создание оптимизированного пакета (production)
+npm run build
+
+/*------КОМПОНЕНТЫ-----------------------------------------------*/
+
+// Подключение компонента Info (допустим из папки components), например в App.js 
+
+import Info from "./components/Info";
+//вывести компонент
+...
+return (
+    <div>
+      <Info />
+    </div>
+);
+
+//Варианты создания компонентов.
+-----
+//Functional Component - функциональный компонент
+import React from 'react';
+function Info() {
+  return <h1>Hello</h1>
+}
+export default Info;
+
+------
+//Functional Component - функциональный компонент(ES6)
+import React from 'react';
+const Info = () => {
+  return <h1>Hello</h1>
+}
+export default Info;
+
+--------
+// Class Component - Компонент класса 
+import React from "react";
+class Info extends React.Component{
+  render(){
+    return <h1>Hello</h1>;
+  }
+}
+export default Info;
+
+//возможен вариант задания имя Component
+import React, { Component } from 'react';
+class Info extends Component { ...}
+export default Info;
+
+
+/*----JSX-------------------------------------------------*/
+//  JSX — расширение языка JavaScript
+
+// Комментирование в JSX
+return(
+  <div>
+    {/*<Comp />*/}
+  </div>
+);
+
+//(чтобы return в render методе был многострочный - круглые скобки)
+function App() {
+  return (
+    <h1>Hello</h1>
+  )
+}
+
+// Возвращать всегда можно только 1 елемент - оберточный тег
+function App() {
+  return (
+    <div>
+      <h1>Hello</h1>
+      <p>Lorem ipsum.</p>
+    </div>
+  )    
+}
+
+// Фрагменты - позволяют группировать список потомков без добавления дополнительных узлов в DOM
+<>
+  <ChildA />
+  <ChildB />
+  <ChildC />
+ </>
+
+// закрывающий тег обязателен, например <img /> 
+function App() {
+  return (
+    <div>
+      <img src="'https://site/1.jpg" alt="" />
+    </div>
+  )    
+}
+
+// Назначение класса className
+function App() {
+  return (
+    <div className="wrap">
+      Hello
+    </div>
+  )    
+}
+
+// интерполяция даных
+const element = <h1>{title}</h1>;
+
+const element = <h1>Hello, {formatName(user)}!</h1>;
+
+// Не ставьте кавычек, когда используете JavaScript-выражение в атрибуте
+const element = <img src={user.avatarUrl}></img>;
+
+
+/*-----МОДУЛЬНЫЙ CSS------------------------------------------------*/
+//Для инкапсуляции CSS перед расширением css надо указать module, наприер
+Price.module.css
+
+//** в Price.js измените подключение css
+import classes from "./Price.module.css";
+
+// назначение классов (не использоать в названии классов - (дефис), тк JCX)
+<div className={classes.item}>
+
+//мультиклассы
+<p className={`${classes.item} ${classes.active}`}>20000 $</p>
+
+
+/*-----РОУТИНГ------------------------------------------------*/
+//очень подробно + вложенные маршруты
+https://getinstance.info/articles/react/learning-react-router/
+
+// Установите react-router-dom 
+
+npm install react-router-dom --save
+или
+npm i react-router-dom --save
+
+// Добавьте в src\App.js
+import {BrowserRouter, Route} from "react-router-dom";
+import Navigation from "./components/Navigation";
+
+// в src\App.js оберните  код компонентой BrowserRouter 
+  return (
+    <BrowserRouter>
+      <div>
+        <Navigation />
+        <section>
+          <Route path='/' component={Home} />
+          <Route path='/Price' component={Price} />
+          <Route path='/About' component={About} />
+          <Route path='/Contact' component={Contact} />
+        </section>
+      </div>
+    </BrowserRouter>
+  );
+
+// в src\components\Navigation.js необходимо импортировать поддержку линков 
+import {Link} from "react-router-dom";
+
+// и добавьте навигацию
+function Navigation() {
+  return (
+    <nav>
+      <ul>
+        <li><Link to="">Home</Link></li>
+        <li><Link to="/Price">Price</Link></li>
+        <li><Link to="/About">About</Link></li>
+        <li><Link to="/Contact">Contact</Link></li>
+      </ul>
+    </nav>
+  );
+}
+
+// если css не модульный
+// active - наше назание, которое мы будем использовать в стилях. Можно любое
+<NavLink to="/test" activeClassName="active">Test</NavLink>
+
+a.active{...}
+
+// если css модульный (classes - это наше название объекта, которое мы дали при импортировании модульного css)
+// active - наше назание, которое мы будем использовать в стилях. Можно любое
+<NavLink to="/test" activeClassName={classes.active}>Test</NavLink>
+
+********************
+// https://metanit.com/web/react/4.1.php
+//квалификатор exact. Этот квалификатор допускает только точное совпадение маршрута со строкой запроса
+<Route exact path="/" component={Main} /> 
+
+// Этот маршрут будет сопоставляться со всеми адресами URL, которые не соответствуют предыдущим маршрутам. И он будет обрабатываться компонентом NotFound. Таким образом мы можем задать обработку при обращении к несуществующим ресурсам в приложении.
+<Route component={NotFound} />
+
+/*----PROPS-------------------------------------------------*/
+//Передача данных между компонентами в React
+Родитель ➡️ Ребенок — используй Props
+
+//При рендеринге React передает значения атрибутов в виде единого объекта "props". То есть значение из атрибута name="Tom" перейдет в свойство props.name.
+! Свойства props – только для чтения.
+Удобно передавать объекты
+
+// Передаем значение
+<Test title="Hello Test" number="20"/>
+<Test title="Привет Test" />
+
+// Используем
+function Test(props) {
+    return <h1>Test {props.title} {props.number}</h1>;
+}
+
+// можно и так
+const Test = (props) => {
+    return <h1>Test {props.title} {props.number}</h1>;
+}
+
+// или так
+class Test extends React.Component{
+  render(){
+    return <h1>Test d {this.props.title} {this.props.number}</h1>;
+  }
+}
+
+/*-----MAP + state + props---------------------------------------------*/
+App->Todos->TodoItem
+
+****App.js
+import React, { Component } from 'react';
+import Todos from './components/Todos';
+
+class App extends Component {
+  state = {
+    todos: [
+      {
+        id: 1,
+        title: 'Take out the trash',
+        completed: false
+      },
+      {
+        id: 2,
+        title: 'Dinner with wife',
+        completed: false
+      },
+      {
+        id: 3,
+        title: 'Meeting with boss',
+        completed: false
+      },
+    ]
+  }
+  render() {
+    return (
+      <div className="App">
+        <Todos todos={this.state.todos} />
+      </div>
+    );
+  }
+}
+
+**** Todo.js
+/*
+см. this.props.todos.map( (todo) => (
+      <TodoItem key={todo.id} todo={todo} />
+    ));
+*/
+import React, { Component } from 'react';
+import TodoItem from './TodoItem';
+
+class Todos extends Component {
+  render() {
+    return this.props.todos.map( (todo) => (
+      <TodoItem key={todo.id} todo={todo} />
+    ));
+  }
+}
+
+export default Todos;
+
+**** TodoItem
+import React, { Component } from 'react';
+
+class TodoItem extends Component {
+  render() {
+    return (
+      <div>
+        <p>{ this.props.todo.title }</p>
+      </div>
+    );
+  }
+}
+
+export default TodoItem;
+
+/*------СТИЛИ через переменную и/или ф-цию------------------------*/
+class TodoItem extends Component {
+  // this.props.todo.completed - принятое значение true/false
+  getStyle = () => {
+    return {
+      background: '#f4f4f4',
+      padding: '10px',
+      borderBottom: '1px #ccc dotted',
+      textDecoration: this.props.todo.completed ? 'line-through' : 'none'
+    }
+  }
+
+  render() {
+    return (
+      <div style={this.getStyle()}>
+          <button style={btnStyle}>x</button>
+      </div>
+    );
+  }
+}
+
+const btnStyle = {
+  background: '#ff0000',
+  color: '#fff',
+  border: 'none',
+  padding: '5px 9px',
+  borderRadius: '50%',
+  cursor: 'pointer',
+  float: 'right'
+}
+
+export default TodoItem;
+
+
+/*------СОБЫТИЯ state setState-----------------------------------------------*/
+Компоненты, основанные на классах, могут хранить информацию о текущей ситуации. Эта информация называется состоянием (state), она хранится в JS-объекте.
+Состояние — это инструмент, позволяющий обновлять пользовательский интерфейс, основываясь на событиях. 
+
+на примере Выпадающего меню
+import React, { Component } from 'react';
+
+class Dropdown extends Component {
+  constructor(props) {
+      super(props);
+      this.state = { isOpened: false };
+  }
+
+  toggleState() {
+    this.setState({ isOpened: !this.state.isOpened });
+  }
+
+  render() {
+    let dropdownText;
+    if (this.state.isOpened) {
+      dropdownText = <div>Here is what is shown in dropdown</div>;
+    }
+    return (
+      <div onClick={this.toggleState.bind(this)}>
+        Its dropdown baby
+        {dropdownText}
+      </div>
+    );
+  }
+}
+
+export default Dropdown;
+
+/*
+bind нужен, чтобы привязать контент.
+Дело в том, что  функция this.toggleState вызывается не в контексте класса и поэтому this является undefined.
+*/
+
+/*------PropTypes-----------------------------------------------*/
+PropTypes
+PropTypes предоставляет ряд валидаторов, которые могут использоваться для проверки, что получаемые данные корректны. По мере роста вашего приложения вы можете отловить много ошибок с помощью проверки типов.
+https://ru.reactjs.org/docs/typechecking-with-proptypes.html
+
+Todos.js
+import PropTypes from 'prop-types';
+...
+Todos.propTypes = {
+  todos: PropTypes.array.isRequired
+}
+
+
+/*-----------------------*/
+Создание приложения с погодой
+https://www.youtube.com/watch?v=0grybmrgc2Q&list=PL0lO_mIqDDFWjZpUTRJ8cBAsTJ5WFk4Cs&index=1
+
+React на практике: приложение с сортировкой и поиском данных
+http://jsraccoon.ru/react-sort-and-search
+Демо конечного приложения можно посмотреть здесь
+http://rtivital.github.io/react-challenge-sort-and-search/
+
+Знакомимся с Redux: основные принципы JavaScript-библиотеки
+Как это работает в глазах пятилетнего ребёнка или разбираем принципы
+https://proglib.io/p/redux-basis/
+
+Руководство по Redux: пишем первое Redux-приложение
+https://proglib.io/p/redux-app/
+
+
+RU
+Пишем интернет-магазин на ReactJS + Redux #1
+https://www.youtube.com/watch?v=3rq4b6Ozjf8
+
+Build an Image Carousel with React in 5 Minutes (incl. Gesture Support, Hooks)
+https://www.youtube.com/watch?v=AqOaI41TADU
+
+RU
+ReactJS 2019 - Полный курс (вкл. Context, Hooks, Lazy, Suspense)
+https://www.youtube.com/watch?v=xJZa2_aldDs
+
+EN
+Redux: Writing a Counter Reducer with Tests
+https://egghead.io/lessons/react-redux-writing-a-counter-reducer-with-tests
+
+EN
+Easy Redux Tutorial: Adding Redux to a Simple React App
+https://www.youtube.com/watch?v=sX3KeP7v7Kg
+
+
+
+*******
+https://reactjsexample.com/
+
+Жизненный цикл
+https://metanit.com/web/react/2.6.php
+https://habr.com/ru/post/358090/
+
+
+Flux
+Основная идея стоящая за использованием Flux-архитектуры — упростить структуру приложения. Это облегчает поддержание и понимание, когда приложение становится более сложным. Поскольку нет никакой двусмысленности во взаимоотношения между различными компонентами, работа становится активной.
+Кроме того, Flux является последовательным и повторяемым, что делает работу с ним очень логичной при создании Action. Также проще сделать, чтоб Store знал, как обрабатывать действия, хранить данные и активировать изменение события.
+
+Flux: Архитектура приложений на React.js
+https://medium.com/@marina.kovalyova/flux-the-react-js-application-architecture-773f515d068d
+Также можно сказать, что Flux больше чем шаблон, больше чем фреймворк и имеет 4 главных компонента (более подробно они будут рассмотрены позже):
+Диспетчер (Dispatcher)
+Хранилище (Stores)
+Представления (Views) (React компонент)
+Действие (Action)
+
+Flux следует концепции однонаправленного потока данных, что делает его простым для поиска ошибок. Данные проходят через прямой поток вашего приложения. React и Flux — на данный момент два самых популярных фреймворка, которые используют принцип однонаправленного потока данных.
+
+В то время как React использует виртуальный DOM для отображения изменений, Flux делает это немного иначе. Во Flux, взаимодействие с пользовательским интерфейсом вызовет ряд действий, которые могут изменить данные приложения.
+
+
+Популярные реализации Flux
+Теперь когда у вас есть всеобъемлющее представление о Flux-архитектуре, давайте рассмотрим несколько популярных реализаций Flux.
+Redux
+Согласно GitHub, Redux предсказуемый State контейнер для JavaScript приложений. Большая часть концепций аналогичны функциональному программированию, а все данные хранятся в одном Store.
+Независимо от размера приложения, Redux всегда является единственным объектом, в отличие от Flux, который содержит различные хранилища для разных объектов. Если в данных были сделаны изменения, это не влияет непосредственно на состояние. Таким образом, state является неизменным.
+Все обновления и манипуляции выполняются на дереве состояний. Но это не делает приложение медленным, так как данный могут совместно использоваться различными версиями дерева состояний.
+
+см. тамже
+
+
+
+Reflux
+Одна из популярных реализаций Flux. Но между ними есть некоторые различия. Reflux не использует Dispatcher; вместо этого каждое Action является Dispatcher’ом.
+Так как Actions представляют собой функции, нет создателей действий. И, пожалуй, лучшая вещь в Reflux, это то, что он более сжатый и обтекаемый, с гораздо меньшей потребностью повторяющихся кодов.
+
+
+
+
+
+
+Задания 1. 
+Ж K Ч
+Задание 2
+Счетчик
+- 3 +
+см. less4 counter
+Задание 3 подкомпоненты 
+less4 -  взять для задания Company
+
+JSON Loader
+https://www.npmjs.com/package/json-loader
+npm install --save-dev json-loader
+
+React на практике: приложение с сортировкой и поиском данных
+http://jsraccoon.ru/react-sort-and-search
+
+EN
+Redux: Writing a Counter Reducer with Tests
+https://egghead.io/lessons/react-redux-writing-a-counter-reducer-with-tests
